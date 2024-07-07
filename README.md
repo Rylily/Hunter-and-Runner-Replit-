@@ -1,0 +1,1 @@
+Hunter and Runner is a game where both hunter and runner move in random direction. If hunter has "X" around it, it will eat the "X". Game ends when hunter has eaten the runner. Runner cannot eat the "X".
