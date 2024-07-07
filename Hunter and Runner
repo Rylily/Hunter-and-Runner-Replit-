@@ -1,0 +1,198 @@
+import random
+import replit
+import time
+
+class Field():
+  field=[["."for i in range(20)]for j in range(10)]
+  for i in range(40):
+    while True:
+      randomx=random.randint(1,8)
+      randomy=random.randint(1,18)
+      if field[randomx][randomy]==".":
+        field[randomx][randomy]="X"
+        break
+
+  def display(self):
+    replit.clear()
+    for r in range(len(Field.field)):
+      for c in range(len(Field.field[r])):
+        print(Field.field[r][c],end="")
+      print()
+    time.sleep(0.5)
+
+  @staticmethod
+  def main():
+    fieldobject=Field()
+    roamerobject=Roamer()
+    hunterobject=Hunter()
+    Field.field[0][0]="R"
+    Field.field[9][19]="H"
+    while True:
+      Rfound=False
+      for r in range(len(Field.field)):
+        for c in range(len(Field.field[r])):
+          if Field.field[r][c]=="R":
+            Rfound=True
+      if Rfound==True:
+        roamerobject.navigate(Field.field)
+        hunterobject.navigate(Field.field)
+        replit.clear()
+        fieldobject.display()
+      elif Rfound==False:
+        break
+
+class Roamer():
+  def __init__(self):
+    self.row=0
+    self.column=0
+    self.direction=1
+
+  def navigate(self,field):
+    Broke=False
+    while True:
+      while True: 
+        randomchance=random.randint(1,5)
+        if randomchance==1:
+          while True:
+            chosendirection=random.randint(1,4)
+            if chosendirection!=self.direction:
+              self.direction=chosendirection
+              break
+        if self.direction==1:
+          if self.row-1>-1 and field[self.row-1][self.column]==".":
+            Field.field[self.row][self.column]="."
+            oldrow=self.row
+            oldcolumn=self.column
+            self.row=self.row-1
+            Field.field[self.row][self.column]="R"
+          else:
+            break
+        elif self.direction==2:
+          if self.row+1<10 and field[self.row+1][self.column]==".":
+            Field.field[self.row][self.column]="."
+            oldrow=self.row
+            oldcolumn=self.column
+            self.row=self.row+1
+            Field.field[self.row][self.column]="R"
+          else:
+            break
+        elif self.direction==3:
+          if self.column-1>-1 and field[self.row][self.column-1]==".":
+            Field.field[self.row][self.column]="."
+            oldrow=self.row
+            oldcolumn=self.column
+            self.column=self.column-1
+            Field.field[self.row][self.column]="R"
+          else:
+            break
+        elif self.direction==4:
+          if self.column+1<20 and field[self.row][self.column+1]==".":
+            Field.field[self.row][self.column]="."
+            oldrow=self.row
+            oldcolumn=self.column
+            self.column=self.column+1
+            Field.field[self.row][self.column]="R"
+          else:
+            break
+        if oldcolumn!=self.column or oldrow!=self.row:
+          Broke=True
+          break
+      if Broke==True:
+        break
+        
+    
+
+class Hunter(Roamer):
+  def __init__(self):
+    self.row=9
+    self.column=19
+    self.direction=1
+    
+  def neighbour(self,field):
+    if self.column-1>-1:
+      if field[self.row][self.column-1]=="R":
+        return self.row,self.column-1
+    if self.column+1<20:
+      if field[self.row][self.column+1]=="R":
+        return self.rowmself.column+1
+    if self.row-1>-1:
+      if field[self.row-1][self.column]=="R":
+        return self.row-1,self.column
+    if self.row+1<10:
+      if field[self.row+1][self.column]=="R":
+        return self.row+1,self.column
+    if self.column-1>-1:
+      if field[self.row][self.column-1]=="X":
+        return self.row,self.column-1
+    if self.column+1<20:
+      if field[self.row][self.column+1]=="X":
+        return self.row,self.column+1
+    if self.row-1>-1:
+      if field[self.row-1][self.column]=="X":
+        return self.row-1,self.column
+    if self.row+1<10:
+      if field[self.row+1][self.column]=="X":
+        return self.row+1,self.column
+    return -1,-1
+
+  def navigate(self,field):
+    row,column=Hunter.neighbour(self,field)
+    if row!=-1 and column!=-1:
+      Field.field[self.row][self.column]="."
+      self.row=row
+      self.column=column
+      Field.field[self.row][self.column]="H"
+    elif row==-1 and column==-1:
+      Broke=False
+      while True:
+        while True: 
+          randomchance=random.randint(1,5)
+          if randomchance==1:
+            while True:
+              chosendirection=random.randint(1,4)
+              if chosendirection!=self.direction:
+                self.direction=chosendirection
+                break
+          if self.direction==1:
+            if self.row-1>-1 and field[self.row-1][self.column]==".":
+              Field.field[self.row][self.column]="."
+              oldrow=self.row
+              oldcolumn=self.column
+              self.row=self.row-1
+              Field.field[self.row][self.column]="H"
+            else:
+              break
+          elif self.direction==2:
+            if self.row+1<10 and field[self.row+1][self.column]==".":
+              Field.field[self.row][self.column]="."
+              oldrow=self.row
+              oldcolumn=self.column
+              self.row=self.row+1
+              Field.field[self.row][self.column]="H"
+            else:
+              break
+          elif self.direction==3:
+            if self.column-1>-1 and field[self.row][self.column-1]==".":
+              Field.field[self.row][self.column]="."
+              oldrow=self.row
+              oldcolumn=self.column
+              self.column=self.column-1
+              Field.field[self.row][self.column]="H"
+            else:
+              break
+          elif self.direction==4:
+            if self.column+1<20 and field[self.row][self.column+1]==".":
+              Field.field[self.row][self.column]="."
+              oldrow=self.row
+              oldcolumn=self.column
+              self.column=self.column+1
+              Field.field[self.row][self.column]="H"
+            else:
+              break
+          if oldcolumn!=self.column or oldrow!=self.row:
+            Broke=True
+            break
+        if Broke==True:
+          break
+
+Field.main()
